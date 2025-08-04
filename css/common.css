@@ -1,0 +1,48 @@
+body{
+    margin:0;
+}
+header{
+    background-color: #a7eba6;
+    padding: 20px 50px;
+}
+header h1{
+    margin: 0;
+    font-size: 24px;
+}
+main{
+    width: 50%;
+    margin: auto;
+    padding: 30px 50px 50px 50px ;
+    background-color: #ececec;
+
+}
+.section{
+    padding: 20px 0;
+}
+.label{
+    font-size: 18px;
+    padding-bottom: 5px;
+}
+.border{
+    border-bottom: 1px solid #8a8a8a;
+}
+.addButton{
+    font-size: 8px;
+    background-color: #70c9ef;
+}
+.addButton input{
+    padding: 0;
+    margin: 3px 0 3px 20px;
+    height: 18px;
+    width: 18px;
+}
+.minusButton{
+    font-size: 8px;
+}
+.minusButton input{
+    padding: 0;
+    height: 18px;
+    width: 18px;
+
+   
+}

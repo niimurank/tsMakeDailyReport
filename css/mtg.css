@@ -1,0 +1,39 @@
+.mtg .oneBlock{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 20px;
+    padding: 10px 0;
+    border-bottom: 1px solid #b7b7b7;
+}
+.mtg .oneBlock .minusButton{
+    width: 30px;   
+}
+.mtg .oneBlock:nth-child(0){
+    padding-top: 0;
+}
+.mtg .oneBlock:nth-last-child(1){
+    padding-bottom: 0;
+    border-bottom: none;
+}
+.mtg .timeBlock{
+    display: flex;
+    justify-content:space-between;
+    align-items: center;
+}
+
+.mtg .timeBlock,.mtg .inputBlock{
+    width: 48%;
+}
+.mtg .timeBlock>div{
+    width: 45%;
+}
+.mtg .timeBlock select{
+    width: 60px;
+    height: 18px;
+    text-align: center;
+}
+.mtg .inputBlock input{
+    padding: 2px;
+    width: calc(100% - 8px);
+}

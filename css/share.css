@@ -1,0 +1,5 @@
+.share textarea{
+    padding: 2px;
+    width: calc(100% - 8px);
+    height: calc(80px - 8px);
+}

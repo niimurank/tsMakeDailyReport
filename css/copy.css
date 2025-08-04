@@ -1,0 +1,7 @@
+/* .copyの中央寄せは削除 */
+
+.copyButton-center {
+    display: flex;
+    justify-content: center;
+    margin-top: 8px;
+}

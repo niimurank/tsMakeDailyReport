@@ -1,0 +1,8 @@
+.workType .radioBox{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.workType .radioBox input{
+    margin: 0;
+}
