@@ -1,11 +1,9 @@
-const getRemailing = () =>{
-    const share = document.getElementById("remaining").value;
+const getRemaining = () => {
+    const remainingElement = document.getElementById("remaining");
+    const value = remainingElement ? remainingElement.value : "";
 
-    if(share !== ""){
+    return createOptionalSection(temp.common.remaining, value);
+};
 
-        return temp.common.remaining + "\n" + share;
-    }else{
-
-        return temp.common.remaining + "\nなし";
-    }
-}
+// 既存コードとの互換性維持のためのエイリアス
+const getRemailing = getRemaining;
