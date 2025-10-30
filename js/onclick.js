@@ -55,7 +55,14 @@ const mtgAddButton = () =>{
     mtgAddedButton.addEventListener("click", function(e){
         // 親のoneBlockを削除
         const oneBlock = e.target.closest('.oneBlock');
-        if(oneBlock) oneBlock.remove();
+        if(oneBlock) {
+            oneBlock.remove();
+            setTimeout(() => {
+                if (typeof updatePreview === 'function') {
+                    updatePreview();
+                }
+            }, 0);
+        }
     });
     // 前要素の終了時間を新要素の開始・終了時間にセット
     if (newIndex > 1) {
@@ -88,7 +95,14 @@ const todoAddButton = () =>{
     todoAddedButton.addEventListener("click", function(e){
         // 親のoneBlockを削除
         const oneBlock = e.target.closest('.oneBlock');
-        if(oneBlock) oneBlock.remove();
+        if(oneBlock) {
+            oneBlock.remove();
+            setTimeout(() => {
+                if (typeof updatePreview === 'function') {
+                    updatePreview();
+                }
+            }, 0);
+        }
     });
 }
 
