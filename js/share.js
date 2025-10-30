@@ -1,11 +1,11 @@
-const createOptionalSection = (label, value) => {
-    const hasContent = value !== "";
-    return `${label}\n${hasContent ? value : "なし"}`;
-};
+const getShare = () =>{
+    const share = document.getElementById("share").value;
 
-const getShare = () => {
-    const shareElement = document.getElementById("share");
-    const value = shareElement ? shareElement.value : "";
+    if(share !== ""){
 
-    return createOptionalSection(temp.common.share, value);
-};
+        return temp.common.share + "\n" + share;
+    }else{
+
+        return temp.common.share + "\nなし";
+    }
+}

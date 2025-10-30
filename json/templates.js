@@ -13,8 +13,4 @@ const temp = {
         greeting_1:"お疲れ様です。",
         greeting_2:"本日の業務を終了します。"
     }
-};
-
-if (typeof window !== "undefined") {
-    window.temp = temp;
 }
