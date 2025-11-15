@@ -88,25 +88,43 @@ const doCopy = (copyText) => {
     navigator.clipboard.writeText(copyText);
 }
 
+const MTG_MINUS_BOUND_FLAG = 'mtgMinusBound';
+
+const bindMtgMinusButtonEvents = () => {
+    const mtgGroup = document.getElementById("mtgGroup");
+    if (!mtgGroup) {
+        return;
+    }
+
+    const minusButtons = mtgGroup.querySelectorAll('.minusButton input');
+    minusButtons.forEach((button) => {
+        if (!button || button.dataset[MTG_MINUS_BOUND_FLAG] === 'true') {
+            return;
+        }
+
+        button.dataset[MTG_MINUS_BOUND_FLAG] = 'true';
+        button.addEventListener("click", function(e){
+            // 親のoneBlockを削除
+            const oneBlock = e.target.closest('.oneBlock');
+            if(oneBlock) {
+                oneBlock.remove();
+                renumberMtgElements();
+                setTimeout(() => {
+                    if (typeof updatePreview === 'function') {
+                        updatePreview();
+                    }
+                }, 0);
+            }
+        });
+    });
+};
+
 const mtgAddButton = () =>{
     const mtgGroup = document.getElementById("mtgGroup");
-    const element = mtgElement(mtgGroup.children.length);
+    const newIndex = mtgGroup.children.length + 1;
+    const element = mtgElement(newIndex);
     mtgGroup.insertAdjacentHTML("beforeend", element);
-    // 追加直後のoneBlock
-    const newIndex = mtgGroup.children.length;
-    const mtgAddedButton = document.getElementById("mtgMinusTime"+ newIndex);
-    mtgAddedButton.addEventListener("click", function(e){
-        // 親のoneBlockを削除
-        const oneBlock = e.target.closest('.oneBlock');
-        if(oneBlock) {
-            oneBlock.remove();
-            setTimeout(() => {
-                if (typeof updatePreview === 'function') {
-                    updatePreview();
-                }
-            }, 0);
-        }
-    });
+    bindMtgMinusButtonEvents();
     // 前要素の終了時間を新要素の開始・終了時間にセット
     if (newIndex > 1) {
         const prevEnd = document.getElementById("MtgEndTime" + (newIndex - 1));
@@ -151,6 +169,7 @@ const todoAddButton = () =>{
 
 if (typeof window !== 'undefined') {
     window.buildReportMessage = buildReportMessage;
+    window.addEventListener('DOMContentLoaded', bindMtgMinusButtonEvents);
 }
 
 if (typeof module !== 'undefined' && module.exports) {
