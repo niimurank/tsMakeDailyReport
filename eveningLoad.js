@@ -25,25 +25,26 @@ window.onload = function(){
 }
 
 function generateEveningPreview() {
-    const paragraph = "\n\n";
-    // 各値は既存のgetterを利用（typeofで関数存在チェック）
-    const greetingText = (typeof eveningGreeting === 'function') ? eveningGreeting() : '';
-    const workType = (typeof getWorkType === 'function') ? getWorkType() : '';
-    const shere = (typeof getShare === 'function') ? getShare() : '';
-    const remailing = (typeof getRemailing === 'function') ? getRemailing() : '';
-    const mtg = (typeof getMtg === 'function') ? getMtg() : '';
-    const todo = (typeof getTodo === 'function') ? getTodo() : '';
-    // temp.common.businessはテンプレートから
-    const business = (window.temp && window.temp.common && window.temp.common.business) ? window.temp.common.business : '';
-    return (
-        greetingText + paragraph +
-        workType + paragraph +
-        business + paragraph +
-        mtg + "\n" +
-        todo +
-        remailing + paragraph +
-        shere
-    );
+    if (typeof buildReportMessage !== 'function') {
+        return '';
+    }
+    return buildReportMessage({
+        greetingFn: (typeof eveningGreeting === 'function') ? eveningGreeting : undefined,
+        workTypeFn: (typeof getWorkType === 'function') ? getWorkType : undefined,
+        mtgFn: (typeof getMtg === 'function') ? getMtg : undefined,
+        todoFn: (typeof getTodo === 'function') ? getTodo : undefined,
+        shareFn: (typeof getShare === 'function') ? getShare : undefined,
+        remailingFn: (typeof getRemailing === 'function') ? getRemailing : undefined,
+        trailingBuilder: ({ paragraph, remailingText, shareText }) => {
+            const remailing = remailingText();
+            const share = shareText();
+
+            if (remailing && share) {
+                return remailing + paragraph + share;
+            }
+            return remailing || share;
+        }
+    });
 }
 
 function updatePreview() {
