@@ -25,21 +25,16 @@ window.onload = function(){
 }
 
 function generateMorningPreview() {
-    const paragraph = "\n\n";
-    const greetingText = (typeof morningGreeting === 'function') ? morningGreeting() : '';
-    const workType = (typeof getWorkType === 'function') ? getWorkType() : '';
-    const shere = (typeof getShare === 'function') ? getShare() : '';
-    const mtg = (typeof getMtg === 'function') ? getMtg() : '';
-    const todo = (typeof getTodo === 'function') ? getTodo() : '';
-    const business = (window.temp && window.temp.common && window.temp.common.business) ? window.temp.common.business : '';
-    return (
-        greetingText + paragraph +
-        workType + paragraph +
-        business + paragraph +
-        mtg + "\n" +
-        todo +
-        shere
-    );
+    if (typeof buildReportMessage !== 'function') {
+        return '';
+    }
+    return buildReportMessage({
+        greetingFn: (typeof morningGreeting === 'function') ? morningGreeting : undefined,
+        workTypeFn: (typeof getWorkType === 'function') ? getWorkType : undefined,
+        mtgFn: (typeof getMtg === 'function') ? getMtg : undefined,
+        todoFn: (typeof getTodo === 'function') ? getTodo : undefined,
+        shareFn: (typeof getShare === 'function') ? getShare : undefined
+    });
 }
 
 function updatePreview() {

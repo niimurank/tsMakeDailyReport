@@ -1,39 +1,82 @@
-const setMorning = () =>{
-    const paragraph = "\n\n";  
-    const greetingText = morningGreeting();
-    const workType = getWorkType();
-    const shere = getShare();
-    const mtg = getMtg();
-    const todo = getTodo();
+const DEFAULT_PARAGRAPH = "\n\n";
 
-    doCopy(
-        greetingText + paragraph +  
-        workType + paragraph + 
-        temp.common.business + paragraph +
-        mtg + "\n" + 
-        todo + 
-        shere 
-    );
+const safeInvoke = (fn) => (typeof fn === 'function' ? fn() : "");
+
+const getBusinessText = () => {
+    if (typeof window !== 'undefined' && window.temp?.common?.business) {
+        return window.temp.common.business;
+    }
+    if (typeof globalThis !== 'undefined' && globalThis.temp?.common?.business) {
+        return globalThis.temp.common.business;
+    }
+    return "";
+};
+
+const buildReportMessage = (config = {}) => {
+    const paragraph = config.paragraph ?? DEFAULT_PARAGRAPH;
+    const greetingText = safeInvoke(config.greetingFn);
+    const workType = safeInvoke(config.workTypeFn);
+    const businessText = config.businessText ?? getBusinessText();
+    const mtg = safeInvoke(config.mtgFn);
+    const todo = safeInvoke(config.todoFn);
+    const mtgAndTodo = mtg + "\n" + todo;
+
+    const head =
+        greetingText + paragraph +
+        workType + paragraph +
+        businessText + paragraph +
+        mtgAndTodo;
+
+    const context = {
+        paragraph,
+        shareText: () => safeInvoke(config.shareFn),
+        remailingText: () => safeInvoke(config.remailingFn)
+    };
+
+    let trailingText = "";
+    if (typeof config.trailingBuilder === 'function') {
+        trailingText = config.trailingBuilder(context) || "";
+    } else {
+        trailingText = context.shareText();
+    }
+
+    return head + trailingText;
+};
+
+const resolveFn = (fn) => (typeof fn === 'function' ? fn : undefined);
+
+const setMorning = () =>{
+    const message = buildReportMessage({
+        greetingFn: resolveFn(typeof morningGreeting !== 'undefined' ? morningGreeting : undefined),
+        workTypeFn: resolveFn(typeof getWorkType !== 'undefined' ? getWorkType : undefined),
+        mtgFn: resolveFn(typeof getMtg !== 'undefined' ? getMtg : undefined),
+        todoFn: resolveFn(typeof getTodo !== 'undefined' ? getTodo : undefined),
+        shareFn: resolveFn(typeof getShare !== 'undefined' ? getShare : undefined)
+    });
+
+    doCopy(message);
 }
 
 const setEvening = () =>{
-    const paragraph = "\n\n";  
-    const greetingText = eveningGreeting();
-    const workType = getWorkType();
-    const shere = getShare();
-    const remailing = getRemailing();
-    const mtg = getMtg();
-    const todo = getTodo();
+    const message = buildReportMessage({
+        greetingFn: resolveFn(typeof eveningGreeting !== 'undefined' ? eveningGreeting : undefined),
+        workTypeFn: resolveFn(typeof getWorkType !== 'undefined' ? getWorkType : undefined),
+        mtgFn: resolveFn(typeof getMtg !== 'undefined' ? getMtg : undefined),
+        todoFn: resolveFn(typeof getTodo !== 'undefined' ? getTodo : undefined),
+        shareFn: resolveFn(typeof getShare !== 'undefined' ? getShare : undefined),
+        remailingFn: resolveFn(typeof getRemailing !== 'undefined' ? getRemailing : undefined),
+        trailingBuilder: ({ paragraph, remailingText, shareText }) => {
+            const remailing = remailingText();
+            const share = shareText();
 
-    doCopy(
-        greetingText + paragraph +  
-        workType + paragraph + 
-        temp.common.business + paragraph +
-        mtg + "\n" + 
-        todo + 
-        remailing + paragraph + 
-        shere 
-    );
+            if (remailing && share) {
+                return remailing + paragraph + share;
+            }
+            return remailing || share;
+        }
+    });
+
+    doCopy(message);
 }
 
 //コピー実行
@@ -104,5 +147,13 @@ const todoAddButton = () =>{
             }, 0);
         }
     });
+}
+
+if (typeof window !== 'undefined') {
+    window.buildReportMessage = buildReportMessage;
+}
+
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { buildReportMessage, DEFAULT_PARAGRAPH };
 }
 
